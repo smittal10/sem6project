@@ -24,7 +24,7 @@ use_sparse = True
 image_dim=2048
 hidden_dim = 512
 num_layers = 2
-num_epochs = 10
+num_epochs = 50
 #sequence_length = 40
 #sequences_per_batch = 256
 alpha = 0.75
@@ -141,7 +141,7 @@ def create_model(input_sequence,image_sequence,label_sequence, vocab_dim, hidden
      print(input_sequence.shape)
      print(image_sequence.shape)
      
-     word_embed = C.layers.Embedding(hidden_dim)(input_sequence)
+     word_embed = C.layers.Embedding(200)(input_sequence)
      print(word_embed.shape)
      #input_seq = Splice ((image_sequence,word_embed),axis=2)
      #input_seq = RowStack ((image_sequence,word_embed),axis=2)
