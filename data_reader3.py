@@ -3,7 +3,8 @@ from pprint import pprint
 import random
 import numpy as np
 import copy
-batch_size=2
+import os.path
+batch_size=1
 def load_caption_2_id(file_path):
     caption_2_id = {}
     with open(file_path,'r') as f:
@@ -73,6 +74,7 @@ class DataReader(object):
 		return train_batches
 	def create_batch(self,train_captions,token_2_id,caption_2_id,id_2_image,img_file):
 		train_batches = self.get_batches(train_captions, batch_size)
+		print(len(train_batches))
 		for batch_item in train_batches:
 			(batch,sent_length)=batch_item
 			x=[]
@@ -80,6 +82,7 @@ class DataReader(object):
 			img_features=[]
 			token_count=0
 			for caption in batch:
+				tokens=caption.split();
 				tok_id=[]
 				img_feat=[]
 				id=caption_2_id[caption]
@@ -88,13 +91,19 @@ class DataReader(object):
 				n=copy.copy(img_id)
 				n=n.zfill(12)
 				img_path=img_file+n+'.txt'
+				if not os.path.exists(img_path):
+					continue
+
 				img=np.loadtxt(img_path)				
-				for i in range(0,sent_length):				
-					tok_id.append(token_2_id[caption[i]])
+				for i in range(0,sent_length):
+					print ("hello")
+					if tokens[i] not in token_2_id:
+						continue				
+					tok_id.append(token_2_id[tokens[i]])
 					img_feat.append(img)
 				x.append((tok_id[: -1]))
 				y.append(tok_id[1:])
-				img_faetures.append(img_feat)
+				img_features.append(img_feat)
 				token_count+=sent_length
 			yield x,y,img_features,token_count
 	
